@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 d_k=195 # srednica kola
 wsp_kalib=0.944 #0.944
 l=170.5*wsp_kalib  # rozstaw kół
-ticks_mm = 128 #125 po prostej
+ticks_mm =128 #125 po prostej
 
 def csv_reader(filepath):
     with open(filepath) as csvfile:
@@ -90,7 +90,7 @@ x = [0]
 y = [0]
 theta = [0]
 time = [0]
-t,posL,posR,velL,velR = csv_reader('left_full_turn.csv')
+t,posL,posR,velL,velR = csv_reader('right_full_turn.csv')
 posL_inc, posR_inc = encoder_increment(posL, posR)
 
 for i in range(len(posL_inc)):

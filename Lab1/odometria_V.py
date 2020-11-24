@@ -49,7 +49,7 @@ x = [0]
 y = [0]
 theta = [0]
 time = [0]
-t,posL,posR,velL,velR = csv_reader('square_left.csv')
+t,posL,posR,velL,velR = csv_reader('right_full_turn.csv')
 
 for i in range(len(t)):
     if(i == 0):
