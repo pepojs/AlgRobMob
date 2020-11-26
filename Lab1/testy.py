@@ -133,7 +133,7 @@ x = [0]
 y = [0]
 theta = [0]
 time = [0]
-t,posL,posR,velL,velR = csv_reader('Enkoder_prosta.csv')
+t,posL,posR,velL,velR = csv_reader('Enkoder_kwadrat.csv')
 
 for i in range(len(t)):
     if(i == 0):
@@ -183,7 +183,7 @@ for i in range(len(t)):
 # print('wspolczynnik kalibracji: ', wsp_kalib)
 # print('x= ',x[len(x)-1],'y= ', y[len(y)-1],'theta= ', theta[len(theta)-1])
 
-t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta2.csv')
+t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_kwadrat.csv')
 time10 = [0]
 for i in range(len(t_robot)):
     if(i == 0): #   10:23:23.127405
@@ -207,6 +207,7 @@ plt.legend(('odometria','pomiary'), loc='upper right')
 plt.savefig("porownanie_prosta2.png")
 plt.figure(2)
 plt.plot(time,theta)
+plt.plot(time,theta_robot)
 
 # plt.figure(3)
 # plt.title("Pozycja robota odczytana przy pomocy pakietu RosAria")
