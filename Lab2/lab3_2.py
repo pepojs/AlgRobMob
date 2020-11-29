@@ -14,15 +14,16 @@ def ransac(P, epsilon, t, N, angle):
 	Sall = []
 	Mall = []
 	for i in range(len(P)):
-		x, y = wsp_kart(P[i], -math.pi/2.0+i*math.pi/512.0)
-		Pkart.append([x, y])
+		if P[i] != np.inf and P[i] != -np.inf:
+			x, y = wsp_kart(P[i], -math.pi/2.0+i*math.pi/512.0)
+			Pkart.append([x, y])
 
 	# wylosowanie kąta i wybór punktów z najbliższej odległości
 	while N > 0 and samplesLeft > 2 * angle + 1:
 		N = N - 1
-		middle = random.randint(angle, len(P)-angle)
+		middle = random.randint(angle, len(Pkart)-angle)
 		S = Pkart[middle-angle:middle+angle]
-		Sall.append(S)
+		# Sall.append(S)
 		XS = []
 		YS = []
 		for i in range(len(S)):
@@ -35,7 +36,7 @@ def ransac(P, epsilon, t, N, angle):
 		Mall.append(M)
 		Sstar = []
 		counter = 0
-		for i in range(len(P)):
+		for i in range(len(Pkart)):
 			if i < middle-angle or i >= middle+angle:
 				d = dist(M[0], -1, M[1], Pkart[i][0], Pkart[i][1])
 				# print(d)
@@ -54,6 +55,7 @@ def ransac(P, epsilon, t, N, angle):
 			# print('drugi polyfit', XS, YS)
 			Mstar = np.polyfit(XS, YS, 1)
 			listOfLines.append(Mstar)
+			Sall.append(Sstar)
 
 	return Sall, Sstar, listOfLines, Mall, Pkart
 
@@ -97,29 +99,38 @@ def xy(S):
 # plt.show()
 
 
-pdb.set_trace()
+# pdb.set_trace()
 
 
 P = read_json('line_detection_1.json')
-print(P)
+# print(P)
 # S,Sstar,Mstar,M,Pkart = ransac(P,0.01,30,100,5)
-pdb.set_trace()
+# pdb.set_trace()
 Sall, Sstar, listOfLines, Mall, Pkart = ransac(P, 0.01, 30, 100, 5)
 
-print("sall", Sall)
-print("listofLines", listOfLines)
+# print("sstar", Sstar)
+# print("sall", Sall)
+# print("listofLines", listOfLines)
+# print("Mall", Mall)
 print("length", len(listOfLines))
 
-# Xp,Yp = xy(Pkart)
+Xp,Yp = xy(Pkart)
 # XP, YP = xy(Sstar)
+# XP, YP = xy(listOfLines)
 # X,Y = xy(S)
-# px = np.linspace(min(XP),max(XP),100)
-# p = np.poly1d(Mstar)
+plt.plot(Xp,Yp,'c*')
+for i, line in enumerate(listOfLines):
+	XP, YP = xy(Sall[i])
+	px = np.linspace(min(XP),max(XP),100)
+	p = np.poly1d(line)
+	plt.plot(px,p(px),'g')
+
+# p = np.poly1d(listOfLines[0])
 # m = np.poly1d(M)
-# plt.plot(Xp,Yp,'c*')
 # plt.plot(XP,YP,'b*')
 # plt.plot(X,Y,'r*')
 # plt.plot(px,p(px),'g')
 # plt.plot(px,m(px),'k')
 # plt.plot(Sstar[:][0],Sstar[:][1],'bo')
-# plt.show()
+plt.savefig("line_det_1.png")
+plt.show()
