@@ -129,84 +129,104 @@ def timeparser2(time1, time2):
 
 
 
-x = [0]
-y = [0]
-theta = [0]
-time = [0]
-t,posL,posR,velL,velR = csv_reader('Enkoder_prosta.csv')
-
-for i in range(len(t)):
-    if(i == 0):
-        deltaT = timeparser2('2020-11-23 10:31:26.837977',t[i]) # pierwszy czas 
-    else:
-        deltaT = timeparser2(t[i-1],t[i])
-    deltaX,deltaY,deltaTheta = calc_pos_V(velR[i],velL[i],deltaT,theta[i],l)
-    x.append(x[i]+deltaX)
-    y.append(y[i]+deltaY)
-    theta.append(theta[i]+deltaTheta)
-    time.append(time[i]+deltaT)
-# wsp_kalib = theta[len(theta)-1]/(2*math.pi)
-
-# x1 = [0]
-# y1 = [0]
-# theta1 = [0]
-# time1 = [0]
+# x = [0]
+# y = [0]
+# theta = [0]
+# time = [0]
 # t,posL,posR,velL,velR = csv_reader('square_left.csv')
 
 # for i in range(len(t)):
 #     if(i == 0):
-#         deltaT = timeparser('0:0:0.0',t[i])
+#         deltaT = timeparser2('2020-11-23 10:31:26.837977',t[i]) # pierwszy czas 
 #     else:
-#         deltaT = timeparser(t[i-1],t[i])
-#     deltaX,deltaY,deltaTheta = calc_pos_V(velR[i],velL[i],deltaT,theta1[i],l*wsp_kalib)
-#     x1.append(x1[i]+deltaX)
-#     y1.append(y1[i]+deltaY)
-#     theta1.append(theta1[i]+deltaTheta)
-#     time1.append(time1[i]+deltaT)
+#         deltaT = timeparser2(t[i-1],t[i])
+#     deltaX,deltaY,deltaTheta = calc_pos_V(velR[i],velL[i],deltaT,theta[i],l)
+#     x.append(x[i]+deltaX)
+#     y.append(y[i]+deltaY)
+#     theta.append(theta[i]+deltaTheta)
+#     time.append(time[i]+deltaT)
 # wsp_kalib = theta[len(theta)-1]/(2*math.pi)
 
-# x_enc = [0]
-# y_enc = [0]
-# theta_enc = [0]
-# time_enc = [0]
-# posL_inc, posR_inc = encoder_increment(posL, posR)
+x1 = [0]
+y1 = [0]
+theta1 = [0]
+time1 = [0]
+t,posL,posR,velL,velR = csv_reader('forward.csv')
 
-# for i in range(len(posL_inc)):
-#     deltaT = timeparser(t[i],t[i+1])
+for i in range(len(t)):
+    if(i == 0):
+        deltaT = timeparser('0:0:0.0',t[i])
+    else:
+        deltaT = timeparser(t[i-1],t[i])
+    deltaX,deltaY,deltaTheta = calc_pos_V(velR[i],velL[i],deltaT,theta1[i],l)
+    x1.append(x1[i]+deltaX)
+    y1.append(y1[i]+deltaY)
+    theta1.append(theta1[i]+deltaTheta)
+    time1.append(time1[i]+deltaT)
+wsp_kalib = theta1[len(theta1)-1]/(2*math.pi)
+
+x_enc = [0]
+y_enc = [0]
+theta_enc = [0]
+time_enc = [0]
+posL_inc, posR_inc = encoder_increment(posL, posR)
+
+for i in range(len(posL_inc)):
+    deltaT = timeparser(t[i],t[i+1])
 		
-#     deltaX,deltaY,deltaTheta = calc_pos(posL_inc[i],posR_inc[i],theta_enc[i])
-#     x_enc.append(x_enc[i]+deltaX)
-#     y_enc.append(y_enc[i]+deltaY)
-#     theta_enc.append(theta_enc[i]+deltaTheta)
-#     time_enc.append(time_enc[i]+deltaT)
+    deltaX,deltaY,deltaTheta = calc_pos(posL_inc[i],posR_inc[i],theta_enc[i])
+    x_enc.append(x_enc[i]+deltaX)
+    y_enc.append(y_enc[i]+deltaY)
+    theta_enc.append(theta_enc[i]+deltaTheta)
+    time_enc.append(time_enc[i]+deltaT)
 
 # print('wspolczynnik kalibracji: ', wsp_kalib)
 # print('x= ',x[len(x)-1],'y= ', y[len(y)-1],'theta= ', theta[len(theta)-1])
 
-t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta2.csv')
-time10 = [0]
-for i in range(len(t_robot)):
-    if(i == 0): #   10:23:23.127405
-        deltaT = timeparser2('2020-11-23 10:31:29.632184',t_robot[i])
-    else:
-        deltaT = timeparser2(t_robot[i-1],t_robot[i])
-    time10.append(time10[i]+deltaT)
-    x_robot[i]=x_robot[i]*1000
-    y_robot[i]=y_robot[i]*1000
+# t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta2.csv')
+# time10 = [0]
+# for i in range(len(t_robot)):
+#     if(i == 0): #   10:23:23.127405
+#         deltaT = timeparser2('2020-11-23 10:31:29.632184',t_robot[i])
+#     else:
+#         deltaT = timeparser2(t_robot[i-1],t_robot[i])
+#     time10.append(time10[i]+deltaT)
+#     x_robot[i]=x_robot[i]*1000
+#     y_robot[i]=y_robot[i]*1000
 
 
-theta_robot.insert(0,theta_robot[0])
+# theta_robot.insert(0,theta_robot[0])
+
+# x_orginal=[0,1150,1150,0,0] # lewy zakręt orginalny
+# y_orginal=[0,0,1150,1150,0]
+# x_orginal=[0,1150,1150,0,0] # prawy zakręt orginalny
+# y_orginal=[0,0,-1150,-1150,0]
+
+x_orginal= [0,400,1150]
+y_orginal = [0,0,0]
+theta_orginal=[0,0,0]
+time_orginal=[0,2,7]
 plt.figure(1)
-plt.title("Porównanie odometrii na podstawie odometrii oraz odczytów z robota")
+plt.title("Porównanie odometrii na podstawie prędkości oraz pozycji enkoderów")
 plt.xlabel("x[mm]")
-# plt.ylim((-100),(100))
+plt.ylim((-100),(100))
 plt.ylabel("y[mm]")
-plt.plot(x,y)
-plt.plot(x_robot,y_robot)
-plt.legend(('odometria','pomiary'), loc='upper right')
-plt.savefig("porownanie_prosta2.png")
+plt.plot(x1,y1)
+plt.plot(x_enc,y_enc)
+plt.plot(x_orginal,y_orginal)
+plt.legend(('prędkości','enkodery','prawdziwa trajektoria'), loc='upper right')
+plt.savefig("prawdziwa_forward.png")
 plt.figure(2)
-plt.plot(time,theta)
+plt.title("Porównanie orientacji robota na podstawie prędkości oraz pozycji enkoderów")
+plt.xlabel("t[s]")
+plt.ylim((-1),(1))
+plt.ylabel("theta[radiany]")
+plt.plot(time1,theta1)
+plt.plot(time_enc,theta_enc)
+plt.plot(time_orginal,theta_orginal)
+plt.legend(('prędkości','enkodery','prawdziwa orientacja'), loc='upper right')
+plt.savefig("theta_forward.png")
+
 
 # plt.figure(3)
 # plt.title("Pozycja robota odczytana przy pomocy pakietu RosAria")
