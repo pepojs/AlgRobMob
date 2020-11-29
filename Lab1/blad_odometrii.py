@@ -75,7 +75,7 @@ x = [0]
 y = [0]
 theta = [0]
 time = [0]
-t,posL,posR,velL,velR = csv_reader('Enkoder_kwadrat.csv')
+t,posL,posR,velL,velR = csv_reader('Enkoder_prosta.csv')
 
 for i in range(len(t)):
     if(i == 0):
@@ -88,12 +88,14 @@ for i in range(len(t)):
     theta.append(theta[i]+deltaTheta)
     time.append(time[i]+deltaT)
 
-t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_kwadrat.csv')
-#print(x_robot[0], x[0])
-#print(y_robot[0], y[0])
-#print(theta_robot[0],theta[0])
+t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta.csv')
+print(x_robot[0], x[0])
+print(y_robot[0], y[0])
+print(theta_robot[0],theta[0])
+print(theta_robot)
 time10 = [0]
 theta0 = theta_robot[0]*math.pi/180.0
+theta0 = 0.93*theta0
 x0 = x_robot[0]*1000
 y0 = y_robot[0]*1000
 #theta_robot.insert(0,theta_robot[0])
@@ -107,27 +109,27 @@ for i in range(len(t_robot)):
     x_robot[i]=x_robot[i]-x0
     y_robot[i]=y_robot[i]*1000
     y_robot[i]=y_robot[i]-y0
-    x_robot[i],y_robot[i] = obrot(x_robot[i],y_robot[i],theta0)
+    x_robot[i],y_robot[i] = obrot(x_robot[i],y_robot[i],-theta0)
     theta_robot[i] = theta_robot[i]*math.pi/180.0
     theta_robot[i] = theta_robot[i]-theta0
-    if theta_robot[i] < -0.01:
-    	theta_robot[i] = theta_robot[i] + math.pi*2
+    #if theta_robot[i] < -0.01:
+    #	theta_robot[i] = theta_robot[i] + math.pi*2
 
-#print(x_robot[0], x[0])
-#print(y_robot[0], y[0])
-#print(theta_robot[0],theta[0])
+print(x_robot[0], x[0])
+print(y_robot[0], y[0])
+print(theta_robot[0],theta[0])
 
 e_x = []
 for i in range(len(x_robot)):
-    e_x.append(abs(x[i]-x_robot[i]))
+    e_x.append(abs(x_robot[i]-x[i]))
 
 e_y = []
 for i in range(len(y_robot)):
-    e_y.append(abs(y[i]-y_robot[i]))
+    e_y.append(abs(y_robot[i]-y[i]))
 
 e_theta = []
 for i in range(len(theta_robot)):
-    e_theta.append(abs(theta[i]-theta_robot[i]))
+    e_theta.append(abs(theta_robot[i]-theta[i])0.93*theta0)
 	
 plt.figure(1)
 plt.title("Porównanie odometrii na podstawie odometrii oraz odczytów z robota")
@@ -136,16 +138,16 @@ plt.xlabel("x[mm]")
 plt.ylabel("y[mm]")
 plt.plot(x,y)
 plt.plot(x_robot,y_robot)
-plt.legend(('odometria','pomiary'), loc='upper right')
+plt.legend(('odometria','pomiary'))
 #plt.savefig("porownanie_prosta2.png")
 plt.figure(2)
 plt.title("Orientacja robota")
 plt.xlabel("t [s]")
 # plt.ylim((-100),(100))
 plt.ylabel("theta [rad]")
-plt.plot(time,theta)
-plt.plot(time10[1:],theta_robot)
-plt.legend(('odometria','pomiary'), loc='upper right')
+plt.plot(time[:100],theta[:100])
+plt.plot(time10[1:101],theta_robot[:100])
+plt.legend(('odometria','pomiary'))
 #plt.savefig("porownanie_prosta2.png")
 
 plt.figure(3)
@@ -153,7 +155,7 @@ plt.title("Błąd odometrii w kierunku x")
 plt.xlabel("time [s]")
 # plt.ylim((-100),(100))
 plt.ylabel("e_x [mm]")
-plt.plot(time10[1:],e_x)
+plt.plot(time10[1:101],e_x[:100])
 #plt.savefig("porownanie_prosta2.png")
 
 plt.figure(4)
@@ -161,7 +163,7 @@ plt.title("Błąd odometrii w kierunku y")
 plt.xlabel("time [s]")
 # plt.ylim((-100),(100))
 plt.ylabel("e_y [mm]")
-plt.plot(time10[1:],e_y)
+plt.plot(time10[1:101],e_y[:100])
 #plt.savefig("porownanie_prosta2.png")
 
 plt.figure(5)
@@ -169,6 +171,6 @@ plt.title("Błąd odometrii - orientacja")
 plt.xlabel("time [s]")
 # plt.ylim((-100),(100))
 plt.ylabel("e_theta [rad]")
-plt.plot(time10[1:],e_theta)
+plt.plot(time10[1:101],e_theta[:100])
 #plt.savefig("porownanie_prosta2.png")
 plt.show()
