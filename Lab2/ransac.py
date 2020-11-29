@@ -41,7 +41,7 @@ def ransac(P,epsilon,t,N,angle):
 def read_json(path):
 	json_data = open(path)
 	data = json.load(json_data)
-	return data[0]["scan"];
+	return data[0]["scan"]
 	
 def dist(A,B,C,xp,yp):
 	d_l = abs(A*xp+B*yp+C)
