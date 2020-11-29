@@ -129,10 +129,28 @@ def timeparser2(time1, time2):
 
 
 
-# x = [0]
-# y = [0]
-# theta = [0]
-# time = [0]
+x = [0]
+y = [0]
+theta = [0]
+time = [0]
+t,posL,posR,velL,velR = csv_reader('Enkoder_kwadrat.csv')
+
+for i in range(len(t)):
+    if(i == 0):
+        deltaT = timeparser2('2020-11-23 10:31:26.837977',t[i]) # pierwszy czas 
+    else:
+        deltaT = timeparser2(t[i-1],t[i])
+    deltaX,deltaY,deltaTheta = calc_pos_V(velR[i],velL[i],deltaT,theta[i],l)
+    x.append(x[i]+deltaX)
+    y.append(y[i]+deltaY)
+    theta.append(theta[i]+deltaTheta)
+    time.append(time[i]+deltaT)
+# wsp_kalib = theta[len(theta)-1]/(2*math.pi)
+
+# x1 = [0]
+# y1 = [0]
+# theta1 = [0]
+# time1 = [0]
 # t,posL,posR,velL,velR = csv_reader('square_left.csv')
 
 # for i in range(len(t)):
@@ -183,16 +201,16 @@ for i in range(len(posL_inc)):
 # print('wspolczynnik kalibracji: ', wsp_kalib)
 # print('x= ',x[len(x)-1],'y= ', y[len(y)-1],'theta= ', theta[len(theta)-1])
 
-# t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta2.csv')
-# time10 = [0]
-# for i in range(len(t_robot)):
-#     if(i == 0): #   10:23:23.127405
-#         deltaT = timeparser2('2020-11-23 10:31:29.632184',t_robot[i])
-#     else:
-#         deltaT = timeparser2(t_robot[i-1],t_robot[i])
-#     time10.append(time10[i]+deltaT)
-#     x_robot[i]=x_robot[i]*1000
-#     y_robot[i]=y_robot[i]*1000
+t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_kwadrat.csv')
+time10 = [0]
+for i in range(len(t_robot)):
+    if(i == 0): #   10:23:23.127405
+        deltaT = timeparser2('2020-11-23 10:31:29.632184',t_robot[i])
+    else:
+        deltaT = timeparser2(t_robot[i-1],t_robot[i])
+    time10.append(time10[i]+deltaT)
+    x_robot[i]=x_robot[i]*1000
+    y_robot[i]=y_robot[i]*1000
 
 
 # theta_robot.insert(0,theta_robot[0])
@@ -227,6 +245,8 @@ plt.plot(time_orginal,theta_orginal)
 plt.legend(('prędkości','enkodery','prawdziwa orientacja'), loc='upper right')
 plt.savefig("theta_forward.png")
 
+plt.plot(time,theta)
+plt.plot(time,theta_robot)
 
 # plt.figure(3)
 # plt.title("Pozycja robota odczytana przy pomocy pakietu RosAria")
