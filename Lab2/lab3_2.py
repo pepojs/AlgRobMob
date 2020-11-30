@@ -14,7 +14,7 @@ def ransac(P, epsilon, t, N, angle):
 	Sall = []
 	Mall = []
 	for i in range(len(P)):
-		if P[i] != np.inf and P[i] != -np.inf:
+		if P[i] != np.inf and P[i] != -np.inf and P[i] != np.nan and not math.isnan(P[i])  :
 			x, y = wsp_kart(P[i], -math.pi/2.0+i*math.pi/512.0)
 			Pkart.append([x, y])
 
@@ -63,7 +63,7 @@ def ransac(P, epsilon, t, N, angle):
 def read_json(path):
 	json_data = open(path)
 	data = json.load(json_data)
-	return data[0]["scan"]
+	return data[3]["scan"]
 
 
 def dist(A, B, C, xp, yp):
@@ -102,11 +102,11 @@ def xy(S):
 # pdb.set_trace()
 
 
-P = read_json('line_detection_1.json')
+P = read_json('line_localization_1.json')
 # print(P)
 # S,Sstar,Mstar,M,Pkart = ransac(P,0.01,30,100,5)
 # pdb.set_trace()
-Sall, Sstar, listOfLines, Mall, Pkart = ransac(P, 0.01, 30, 100, 5)
+Sall, Sstar, listOfLines, Mall, Pkart = ransac(P, 0.01, 5, 50, 10)
 
 # print("sstar", Sstar)
 # print("sall", Sall)
@@ -132,5 +132,5 @@ for i, line in enumerate(listOfLines):
 # plt.plot(px,p(px),'g')
 # plt.plot(px,m(px),'k')
 # plt.plot(Sstar[:][0],Sstar[:][1],'bo')
-plt.savefig("line_det_1.png")
+plt.savefig("line_loc_1d.png")
 plt.show()
