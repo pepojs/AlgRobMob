@@ -3,7 +3,7 @@ import datetime
 from drive import RosAriaDriver
 
 # Enter robot number instead of X 
-robot=RosAriaDriver('/PIONIER6')
+robot=RosAriaDriver('/PIONIER4')
 
 ar=[]
 robot.ResetPose()
@@ -22,5 +22,5 @@ for x in range(0,3):
         nb = raw_input('Press enter')
 
 import json
-with open('data_stereo.json','w') as json_data_file:
+with open('data_stereo4.json','w') as json_data_file:
     json.dump(ar,json_data_file)
