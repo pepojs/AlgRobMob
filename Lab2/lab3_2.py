@@ -143,6 +143,18 @@ def xy(S):
 		YS.append(S[i][1])
 	return XS, YS
 
+def prostopadle(idx,M):
+	A1 = M[idx][0]
+	dist = np.Inf
+	for i in range(len(M)):
+		if i!=idx:
+			A2 = M[i][0]
+			d = abs(A1*A2+1)
+			if (d<dist):
+				dist = d
+				r = i
+	return r
+				
 # x = np.array([0,1,2,3,4,5])
 # y = np.array([2.1, 2.9, 4.15, 4.98, 5.5, 6])
 # z = np.polyfit(x, y, 1)
@@ -173,7 +185,7 @@ for i in range(5):
 	# print(P)
 	# S,Sstar,Mstar,M,Pkart = ransac(P,0.01,30,100,5)
 	# pdb.set_trace()
-	Sall, Sstar, listOfLines, linesABC, Mall, Pkart = ransac(P, 0.01, 70, 50, 20)
+	Sall, Sstar, listOfLines, linesABC, Mall, Pkart = ransac(P, 0.01, 40, 50, 20)
 
 	# print("sstar", Sstar)
 	# print("sall", Sall)
@@ -202,7 +214,9 @@ for i in range(5):
 # plt.plot(Sstar[:][0],Sstar[:][1],'bo')
 	plt.savefig("line_loc_1d.png")
 	print(linesABC)
-	pose = robot_location(linesABC[0],linesABC[1])
+	i = prostopadle(0,linesABC)
+	print('wybrana prosta prostopadla: ',i)
+	pose = robot_location(linesABC[0],linesABC[i])
 	print(pose)
 	print(poseR)
 	plt.show()
