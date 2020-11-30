@@ -19,6 +19,7 @@ for x in range(0,3):
         t1=datetime.datetime.now()-t0
         rec['time']=t1.seconds+t1.microseconds/1000000.0
         ar.append(rec)
+        robot.setSpeedLR(0.5/10,0.5/10,10)
         nb = raw_input('Press enter')
 
 import json

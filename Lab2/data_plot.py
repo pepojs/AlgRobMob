@@ -31,7 +31,7 @@ def xy(S):
 	return XS, YS
 
 
-P = read_json('data_stereo.json')
+P = read_json('data_stereo4.json')
 Xp, Yp = p2c(P)
 
 x = np.arange(0,512)
@@ -40,7 +40,7 @@ theta = (np.pi/512 )*(x-256)  # angle in rad
 fig1 = plt.figure()
 ax1 = fig1.add_axes([0.1,0.1,0.8,0.8],polar=True)
 line, = ax1.plot(theta,P,lw=2.5)
-#ax1.set_ylim(0,2)  # distance range
+ax1.set_ylim(0,2)  # distance range
 
 plt.figure(2)
 plt.plot(Xp,Yp,'b*')
