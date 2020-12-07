@@ -88,7 +88,7 @@ def ransac(P, epsilon, t, N, angle):
 	Mall = []
 	ListOfCounters = []
 	for i in range(len(P)):
-		if P[i] != np.inf and P[i] != -np.inf and P[i] != np.nan and not math.isnan(P[i]) and P[i]<=2.5 :
+		if P[i] != np.inf and P[i] != -np.inf and P[i] != np.nan and not math.isnan(P[i]) and P[i]<=3.7 :
 			x, y = wsp_kart(P[i], -math.pi/2.0+i*math.pi/512.0)
 #			x, y = wsp_kart(P[i], -math.pi/4.0+i*math.pi/512.0)
 			Pkart.append([x, y])
@@ -196,22 +196,22 @@ def prostopadle(idx,M):
 
 # pdb.set_trace()
 
-for i in range(5):
-	P, poseR = read_json('line_localization_1.json',i)
+for i in range(3):
+	P, poseR = read_json('data_stereo_jazda.json',i)
 	poseR[2] = poseR[2]*math.pi/180.0
 
 	x = np.arange(0,512)
 	theta = (np.pi/512 )*(x-256)  # angle in rad
 
-	fig1 = plt.figure()
-	ax1 = fig1.add_axes([0.1,0.1,0.8,0.8],polar=True)
-	line, = ax1.plot(theta,P,lw=2.5)
+	#fig1 = plt.figure()
+	#ax1 = fig1.add_axes([0.1,0.1,0.8,0.8],polar=True)
+	#line, = ax1.plot(theta,P,lw=2.5)
 	#ax1.set_ylim(0,2)  # distance range
 
 	# print(P)
 	# S,Sstar,Mstar,M,Pkart = ransac(P,0.01,30,100,5)
 	# pdb.set_trace()
-	Sall, Sstar, listOfLines, linesABC, Mall, Pkart, ListOfCounters = ransac(P, 0.01, 40, 50, 20)
+	Sall, Sstar, listOfLines, linesABC, Mall, Pkart, ListOfCounters = ransac(P, 0.02, 20, 50, 7)
 
 	# print("sstar", Sstar)
 	# print("sall", Sall)
@@ -238,7 +238,7 @@ for i in range(5):
 # plt.plot(px,p(px),'g')
 # plt.plot(px,m(px),'k')
 # plt.plot(Sstar[:][0],Sstar[:][1],'bo')
-	plt.savefig("line_loc_1d.png")
+	#plt.savefig("line_loc_1d.png")
 	print(linesABC)
 	maxCounter = ListOfCounters.index(max(ListOfCounters))
 
