@@ -6,7 +6,13 @@ import random
 import json
 
 global first_line
+global second_line
+global pose_shift
 first_line = []
+second_line = []
+pose_shift = []
+global scaner_shift
+scaner_shift = 0.17
 
 # line1 = [A, B, C] -> Ax + By + C = 0
 def line_intersection(line1, line2):
@@ -31,7 +37,7 @@ def line_intersection_angle(line1, line2):
     [A1, B1, C1] = line1
     [A2, B2, C2] = line2
     
-    return math.acos((A1*A2 + B1*B2)/(math.sqrt(A1*A1+B1*B1)*math.sqrt(A2*A2+B2*B2)))
+    return math.atan2(A1*B2 - A2*B1, A1*A2 + B1*B2) #math.acos((A1*A2 + B1*B2)/(math.sqrt(A1*A1+B1*B1)*math.sqrt(A2*A2+B2*B2)))
 
 def rotate_point(point, angle):
     x, y = point
@@ -40,19 +46,37 @@ def rotate_point(point, angle):
 
     return rotate_x, rotate_y
 
-def robot_location(line1, line2):
-    global first_line
-    if(len(first_line) == 0):
-        first_line = line1
-        
-        x,y = line_intersection(line1, line2)
-        return [-x, -y, 0]
+def robot_location(line1, line2, second_angle):
+	global first_line
+	global second_line
+	global pose_shift
 
-    else:
-        x,y = line_intersection(line1, line2)
-        theta = line_intersection_angle(first_line, line1)
-        x, y = rotate_point([x,y], -theta)
-        return [-x, -y, -theta]
+
+	if(len(first_line) == 0):
+		first_line = line1
+		second_line = line2
+
+		x,y = line_intersection(line1, line2)
+		if len(pose_shift) == 0:
+			pose_shift = [-x, -y]
+		return [-x, -y, 0]
+
+	else:
+		print('Kat miedzy first_line i line1: {}'.format((-line_intersection_angle(first_line, line1))))
+		print('Kat miedzy first_line i line2: {}'.format((-line_intersection_angle(first_line, line2))))
+
+		x,y = line_intersection(line1, line2)
+		print('robot_loc: {}, {}'.format(x,y))
+		if second_angle:
+			theta = line_intersection_angle(first_line, line1)
+			theta = (theta + math.pi)
+		else:
+			theta = line_intersection_angle(first_line, line1)
+
+		print('robot_loc: {}'.format(-theta))
+		x, y = rotate_point([x,y], -theta)
+
+		return [-x, -y, -theta]
 
 def ransac(P, epsilon, t, N, angle):
 	# Transformacja do współrzędnych kartezjańskich
@@ -62,6 +86,7 @@ def ransac(P, epsilon, t, N, angle):
 	linesABC = []
 	Sall = []
 	Mall = []
+	ListOfCounters = []
 	for i in range(len(P)):
 		if P[i] != np.inf and P[i] != -np.inf and P[i] != np.nan and not math.isnan(P[i]) and P[i]<=2.5 :
 			x, y = wsp_kart(P[i], -math.pi/2.0+i*math.pi/512.0)
@@ -98,7 +123,7 @@ def ransac(P, epsilon, t, N, angle):
 		print(counter)
 		# pdb.set_trace()
 		if counter > t:
-
+			ListOfCounters.append(counter)
 			for i in range(len(Sstar)):
 				XS.append(Sstar[i][0])
 				YS.append(Sstar[i][1])
@@ -114,7 +139,7 @@ def ransac(P, epsilon, t, N, angle):
 			for i in range(len(Sstar)):
 				Pkart.remove(Sstar[i])
 
-	return Sall, Sstar, listOfLines, linesABC, Mall, Pdisp
+	return Sall, Sstar, listOfLines, linesABC, Mall, Pdisp, ListOfCounters
 
 
 def read_json(path,i):
@@ -130,6 +155,7 @@ def dist(A, B, C, xp, yp):
 
 
 def wsp_kart(R, theta):
+	global scaner_shift
 	x = R*math.cos(theta)
 	y = R*math.sin(theta)
 	return np.array([x, y])
@@ -185,7 +211,7 @@ for i in range(5):
 	# print(P)
 	# S,Sstar,Mstar,M,Pkart = ransac(P,0.01,30,100,5)
 	# pdb.set_trace()
-	Sall, Sstar, listOfLines, linesABC, Mall, Pkart = ransac(P, 0.01, 40, 50, 20)
+	Sall, Sstar, listOfLines, linesABC, Mall, Pkart, ListOfCounters = ransac(P, 0.01, 40, 50, 20)
 
 	# print("sstar", Sstar)
 	# print("sall", Sall)
@@ -214,9 +240,45 @@ for i in range(5):
 # plt.plot(Sstar[:][0],Sstar[:][1],'bo')
 	plt.savefig("line_loc_1d.png")
 	print(linesABC)
-	i = prostopadle(0,linesABC)
-	print('wybrana prosta prostopadla: ',i)
-	pose = robot_location(linesABC[0],linesABC[i])
+	maxCounter = ListOfCounters.index(max(ListOfCounters))
+
+	i = prostopadle(maxCounter, linesABC)
+	print('wybrana prosta prostopadla: ', i)
+	'''if len(first_line) > 0:
+		first_to_first = abs(linesABC[0][0] - first_line[0])
+		first_to_second = abs(linesABC[i][0] - first_line[0])
+		second_to_first = abs(linesABC[0][0] - second_line[0])
+		second_to_second = abs(linesABC[i][0] - second_line[0])
+		print(first_to_first)
+		print(first_to_second)
+		print(second_to_first)
+		print(second_to_second)
+		print('first_to_first - second_to_first: {}'.format(first_to_first - second_to_first))
+		print('first_to_second - second_to_second: {}'.format(first_to_second - second_to_second))
+
+		if first_to_first <= second_to_first and first_to_second > second_to_second:
+			pose = robot_location(linesABC[0], linesABC[i])
+
+		elif first_to_first > second_to_first and first_to_second <= second_to_second:
+			pose = robot_location(linesABC[i], linesABC[0])
+
+		else:
+			pose = robot_location(linesABC[0], linesABC[i])
+
+	else:'''
+	#pose1 =
+	#pose2 = robot_location
+	if linesABC[maxCounter][0] > 0 and linesABC[i][0] < 0:
+		pose = robot_location(linesABC[maxCounter], linesABC[i], False)
+
+	else:
+		pose = robot_location(linesABC[i], linesABC[maxCounter], True)
+
+
 	print(pose)
-	print(poseR)
+	poseR_x, poseR_y, poseR_theta = poseR #rotate_point([poseR[0]+scaner_shift, poseR[1]], -math.pi/2.0)
+	poseR_x += pose_shift[0]
+	poseR_y = poseR_y + pose_shift[1]
+	print([poseR_x, poseR_y, poseR[2]])
+	print([poseR[0], poseR[1], poseR[2]])
 	plt.show()
