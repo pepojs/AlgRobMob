@@ -6,10 +6,9 @@ import numpy as np
 import pdb
 
 class Map():
-    CELL_SIZE = 0.05  # [m]
     RADIUS = np.inf
 
-    def __init__(self, len_x=300, len_y=300, hp=0.9, mp=0.1):
+    def __init__(self, len_x=200, len_y=200, hp=0.9, mp=0.1):
         self.__len_x = len_x
         self.__len_y = len_y
         self.__hit_probability = hp
@@ -23,8 +22,8 @@ class Map():
         for x in range(self.__len_x):
             for y in range(self.__len_y):
                 self.prob_area[x][y] = self.probability(self.area[x][y])
-        # pdb.set_trace()
-        plt.imshow(self.prob_area, interpolation="nearest",cmap='Blues', origin='lower')
+        pdb.set_trace()
+        plt.imshow(self.prob_area, interpolation="nearest",cmap='Blues', origin='upper')
         plt.show(block=False)
         plt.colorbar()
         plt.pause(1.0)
