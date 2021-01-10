@@ -22,12 +22,12 @@ class Map():
         for x in range(self.__len_x):
             for y in range(self.__len_y):
                 self.prob_area[x][y] = self.probability(self.area[x][y])
-        pdb.set_trace()
+        #pdb.set_trace()
         plt.imshow(self.prob_area, interpolation="nearest",cmap='Blues', origin='upper')
-        plt.show(block=False)
+        #plt.show(block=False)
         plt.colorbar()
-        plt.pause(1.0)
-        #plt.show()
+        #plt.pause(1.0)
+        plt.show()
 
     def probability(self, cell):
         return 1 - (1/(1 + np.exp(cell)))
