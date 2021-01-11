@@ -75,7 +75,7 @@ x = [0]
 y = [0]
 theta = [0]
 time = [0]
-t,posL,posR,velL,velR = csv_reader('Enkoder_prosta.csv')
+t,posL,posR,velL,velR = csv_reader('Enkoder_kwadrat.csv')
 
 for i in range(len(t)):
     if(i == 0):
@@ -88,7 +88,7 @@ for i in range(len(t)):
     theta.append(theta[i]+deltaTheta)
     time.append(time[i]+deltaT)
 
-t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_prosta.csv')
+t_robot, x_robot, y_robot, theta_robot = csv_reader_pose('Robot_kwadrat.csv')
 print(x_robot[0], x[0])
 print(y_robot[0], y[0])
 print(theta_robot[0],theta[0])
@@ -129,7 +129,7 @@ for i in range(len(y_robot)):
 
 e_theta = []
 for i in range(len(theta_robot)):
-    e_theta.append(abs(theta_robot[i]-theta[i])0.93*theta0)
+    e_theta.append(abs(theta_robot[i]-theta[i]))#0.93*theta0)
 	
 plt.figure(1)
 plt.title("Porównanie odometrii na podstawie odometrii oraz odczytów z robota")

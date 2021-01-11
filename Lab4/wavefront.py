@@ -64,7 +64,10 @@ moves = [
 current_field_value = arr[robot[0]][robot[1]]
 current_field_index = [robot[0], robot[1]]
 path = [current_field_index]
+<<<<<<< HEAD
 movesList = []
+=======
+>>>>>>> 12fed058a5e13b9e3f8b0b533798549763a00783
 last_direction = None
 
 while current_field_value != 0:
@@ -75,7 +78,10 @@ while current_field_value != 0:
             current_field_index = field_index
             current_field_value = field_value
             path.append(field_index)
+<<<<<<< HEAD
             movesList.append(last_direction)
+=======
+>>>>>>> 12fed058a5e13b9e3f8b0b533798549763a00783
             continue
     for move in moves:
         field_index = Direction.get_index_in_direction(current_field_index, move)
@@ -84,8 +90,14 @@ while current_field_value != 0:
             current_field_index = field_index
             path.append(field_index)
             last_direction = move
+<<<<<<< HEAD
             movesList.append(last_direction)
             break
 
 print('Determined path: \n' + str(path))
 print('Moves list: {}'.format(movesList))
+=======
+            break
+
+logging.info('Determined path: \n' + str(path))
+>>>>>>> 12fed058a5e13b9e3f8b0b533798549763a00783
