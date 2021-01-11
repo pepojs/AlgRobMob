@@ -9,7 +9,7 @@ import algorithm
 
 import pdb
 
-CELLSIZE=0.1
+CELLSIZE=0.02
 WORLDWIDTH=20
 
 
@@ -19,7 +19,7 @@ def main():
         sys.exit(-1)
     data = Parser(sys.argv[1],WORLDWIDTH/2,WORLDWIDTH/2,0).global_coordinates
     grid_map = Map(len_x=int(WORLDWIDTH/CELLSIZE),len_y=int(WORLDWIDTH/CELLSIZE))
-    pdb.set_trace()
+    #pdb.set_trace()
     print(data[0]['coordinates'])
     x, y = list(map(list, zip(*data[0]['coordinates'])))
     robot_position = (data[0]['pose'][0], data[0]['pose'][1])
