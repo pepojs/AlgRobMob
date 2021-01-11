@@ -12,7 +12,6 @@ import pdb
 CELLSIZE=0.1
 WORLDWIDTH=20
 
-
 def main():
     if len(sys.argv) < 2:
         print('Nie podano pliku')

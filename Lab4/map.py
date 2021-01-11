@@ -29,9 +29,12 @@ class Map():
         plt.show(block=False)
         plt.colorbar()
         plt.pause(1.0)
-        print(self.prob_area)
+        #print(self.prob_area)
         
         #plt.show()
+    
+    def return_map(self):
+        return self.prob_area    
 
     def probability(self, cell):
         return 1 - (1/(1 + np.exp(cell)))
