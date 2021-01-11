@@ -15,7 +15,7 @@ CELLSIZE=0.05
 WORLDWIDTH=20
 
 GOAL = (200, 240)
-ROBOT = (222, 312)
+ROBOT = (120, 270)
 
 def main():
     if len(sys.argv) < 2:
@@ -35,7 +35,7 @@ def main():
         a.run()
     a.grid_map.map_plot()
     occup_map = a.grid_map.return_map()
-    kernel = np.ones((5,5),np.uint8)
+    kernel = np.ones((3,3),np.uint8)
     dilation = cv2.dilate(occup_map,kernel,iterations = 1)
     plt.figure(3)
     plt.imshow(dilation, interpolation="nearest",cmap='Blues', origin='upper')
@@ -43,7 +43,8 @@ def main():
     
     #print(occup_map)
 
-    arr = wavefront_map(occup_map, GOAL, ROBOT, 0.1)
+    arr = wavefront_map(dilation, GOAL, ROBOT, 0.1)
+    arr1 = wavefront_map(occup_map, GOAL, ROBOT, 0.1)
     #print(arr)
     '''
     plt.figure(3)
@@ -51,12 +52,20 @@ def main():
     plt.show()
     '''
     path, moves_list = path_planning(arr, ROBOT)
-    print(path)
     plt.figure(2)
     plt.imshow(occup_map, interpolation="nearest",cmap='Blues', origin='upper')
     plt.plot([i[1] for i in path], [i[0] for i in path], 'ro')
     plt.plot(ROBOT[0], ROBOT[1], 'x')
+    plt.title("Z dylatacją")
+    path1, moves_list1 = path_planning(arr1, ROBOT)
+#    print(path)
+    plt.figure(3)
+    plt.imshow(occup_map, interpolation="nearest",cmap='Blues', origin='upper')
+    plt.plot([i[1] for i in path1], [i[0] for i in path1], 'ro')
+    plt.plot(ROBOT[0], ROBOT[1], 'x')
+    plt.title("Bez dylatacji")
     plt.show()
+    
     
     #input()
 
