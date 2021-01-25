@@ -1,4 +1,5 @@
-mport sys
+import sys
+import math
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
@@ -133,9 +134,17 @@ def movement():
 			final_pose = final(distance, POSE, orient)
 			while norm(current_pose,final_pose) > 0.1:
 				msg.linear.x = 0.1
+				msg.angular.z = 0
 				pub.publish(msg)
 				current_pose = POSE
+				rotate = rotation(orient - math.atan2(POSE[1]-final_pose[1],POSE[0]-final_pose[0]))
+				while abs(rotate) > 0.5:
+					msg.linear.x = 0
+					msg.angular.z = sign(rotate)*0.2
+					pub.publish(msg)
+					rotate = rotation(orient - math.atan2(POSE[1]-final_pose[1],POSE[0]-final_pose[0]))
 			msg.linear.x = 0
+			msg.angular.z = 0
 			pub.publish(msg)
 			map_pub.publish(True)
 			move = False
