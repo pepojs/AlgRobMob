@@ -141,5 +141,5 @@ def movement():
 			move = False
 
 if __name__ == '__main__':
-	mapping()
+	movement()
 	
