@@ -33,6 +33,11 @@ class Map():
         
         #plt.show()
     
+    def update(self):
+        for x in range(self.__len_x):
+            for y in range(self.__len_y):
+                self.prob_area[x][y] = self.probability(self.area[x][y])
+        
     def return_map(self):
         return self.prob_area    
 

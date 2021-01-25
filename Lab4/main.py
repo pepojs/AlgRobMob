@@ -19,6 +19,8 @@ ROBOT = (108, 294)
 THRESHOLD = 0.2
 KERNEL = 3
 
+
+
 def main():
     if len(sys.argv) < 2:
         print('Nie podano pliku')
