@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import sys
 import math
 from nav_msgs.msg import Odometry
@@ -18,9 +20,9 @@ from parser import Parser
 import algorithm as algorithm
 
 POSE = (0, 0, 0)
-GOAL = (200,200)
-THRESHOLD = 0.2
-CELLSIZE=0.05
+GOAL = (25,22)
+THRESHOLD = 0.05
+CELLSIZE=0.5
 WORLDWIDTH=20
 
 path = 0
@@ -102,7 +104,8 @@ def final(distance,pose,orient):
 def movement():
 	global path, move, POSE
 	nr = 4
-	
+
+	rospy.init_node("move",anonymous=True)
 	pub = rospy.Publisher('cmd_vel', Twist, queue_size=1)
 	pub_map = rospy.Publisher('ready', Bool, queue_size=1)
 	msg = Twist()
