@@ -3,7 +3,7 @@ import math
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import LaserScan
 from geometry_msgs.msg import Twist
-form std_msgs.msg import Bool
+from std_msgs.msg import Bool
 import rospy
 import tf
 
